@@ -1,0 +1,45 @@
+Sub CriarPontosDoExcelNoSolidWorks()
+    ' Declarando as variáveis para o SolidWorks e Excel
+    Dim swApp As Object
+    Dim swModel As Object
+    Dim swSketchManager As Object
+    Dim ws As Worksheet
+    Dim ultimaLinha As Long
+    Dim i As Long
+    Dim xCoord As Double, yCoord As Double, zCoord As Double
+    
+    ' Conectando ao SolidWorks
+    Set swApp = CreateObject("SldWorks.Application")
+    swApp.Visible = True ' SolidWorks visível
+    
+    ' Criando um novo documento
+    Set swModel = swApp.NewPart
+    
+    ' Acessando o Sketch Manager para desenhar os pontos
+    Set swSketchManager = swModel.SketchManager
+    
+    ' Selecionando o plano frontal para o esboço
+    swModel.CreatePlane 2, 0, 0, 0
+    swSketchManager.InsertSketch True
+    
+    ' Selecionando a planilha ativa no Excel e identificando a última linha de dados
+    Set ws = ThisWorkbook.Sheets("Planilha1") ' Mude "Planilha1" se necessário
+    ultimaLinha = ws.Cells(ws.Rows.Count, 1).End(xlUp).Row ' Última linha na coluna A
+    
+    ' Loop através das linhas de dados para criar pontos
+    For i = 2 To ultimaLinha
+        ' Lendo as coordenadas da planilha
+        xCoord = ws.Cells(i, 1).Value
+        yCoord = ws.Cells(i, 2).Value
+        zCoord = ws.Cells(i, 3).Value
+        
+        ' Criando o ponto com as coordenadas lidas
+        swSketchManager.CreatePoint xCoord, yCoord, zCoord
+    Next i
+    
+    ' Finalizando o esboço
+    swSketchManager.InsertSketch False
+    
+    ' Informando o usuário
+    MsgBox "Pontos criados com sucesso no SolidWorks!"
+End Sub
