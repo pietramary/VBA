@@ -1,0 +1,29 @@
+Sub CriarPontoNoSolidWorks()
+    ' Declarando as variáveis para o SolidWorks
+    Dim swApp As Object
+    Dim swModel As Object
+    Dim swSketchManager As Object
+    
+    ' Conectando ao SolidWorks
+    Set swApp = CreateObject("SldWorks.Application")
+    swApp.Visible = True ' Tornando o SolidWorks visível, caso esteja minimizado
+    
+    ' Criando um novo documento ou selecionando um já aberto
+    Set swModel = swApp.NewPart ' Abre uma nova peça
+    
+    ' Acessando o Sketch Manager para desenhar o ponto
+    Set swSketchManager = swModel.SketchManager
+    
+    ' Iniciar o esboço na frente (plano frontal)
+    swModel.CreatePlane 2, 0, 0, 0 ' Usando o plano frontal
+    swSketchManager.InsertSketch True
+    
+    ' Criando o ponto nas coordenadas (0,0,0) para começar
+    swSketchManager.CreatePoint 0, 0, 0
+    
+    ' Finalizando o esboço
+    swSketchManager.InsertSketch False
+    
+    ' Informando o usuário que o ponto foi criado
+    MsgBox "Ponto criado com sucesso no SolidWorks!"
+End Sub
